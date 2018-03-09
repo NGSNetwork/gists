@@ -1,8 +1,9 @@
 #!/bin/bash
-# Backup Server Files, V1
+# Backup Source Server, V1
 
 # DEPENDENCIES:
-#       rclone, a Source Server made using LGSM (or comment out the serverfiles check)
+#       rclone, a Source Server made using LGSM (or comment out the serverfiles check),
+#       bzip2, at least 2.5x the amount of storage taken up by DIRSTOBACKUP
 
 # Place in a separate folder and point it to the other directories.
 
@@ -10,9 +11,9 @@
 # Very simplistic program, set what you need with variables.
 
 SERVERNAME="tf_trade"
-SERVERFILESDIR="/path/to/serverfolder/${SERVERNAME}/serverfiles"
+SERVERFILESDIR="/home/steam/${SERVERNAME}/serverfiles"
 GAMEDIR="tf"
-RCLONEDIR="remote:ServerBackups/SourceServer"
+RCLONEDIR="TF2TradeServerBackup:Server Backups/NGS TF2 Main Trade"
 
 DIRSTOBACKUP=("addons" "cfg" "materials" "models" "sound")
 
@@ -24,13 +25,22 @@ fi
 
 echo "Working in:"
 pwd
+
 rm -rf $SERVERNAME
 mkdir $SERVERNAME
 for i in ${DIRSTOBACKUP[@]}; do
-        echo "Making and setting ${SERVERNAME}/${i}"
+        echo "Making and setting ${SERVERNAME}/${i}!"
         mkdir $SERVERNAME/$i
         cp -r $SERVERFILESDIR/$GAMEDIR/$i $SERVERNAME/
 done
 
+echo "Zipping up!"
+tar cf $SERVERNAME.tar $SERVERNAME/
+bzip2 $SERVERNAME.tar
+
 echo "UPLOADING! This may take a while..."
-rclone copy $SERVERNAME "$RCLONEDIR"
+rclone copy $SERVERNAME.tar.bz2 "$RCLONEDIR"
+
+echo "Cleaning up!"
+rm -rf $SERVERNAME
+rm -f $SERVERNAME.tar.bz2
