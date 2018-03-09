@@ -11,9 +11,9 @@
 # Very simplistic program, set what you need with variables.
 
 SERVERNAME="tf_trade"
-SERVERFILESDIR="/home/steam/${SERVERNAME}/serverfiles"
+SERVERFILESDIR="/path/to/${SERVERNAME}/serverfiles"
 GAMEDIR="tf"
-RCLONEDIR="TF2TradeServerBackup:Server Backups/NGS TF2 Main Trade"
+RCLONEDIR="remote:Server Backups/CHECKEM"
 
 DIRSTOBACKUP=("addons" "cfg" "materials" "models" "sound")
 
